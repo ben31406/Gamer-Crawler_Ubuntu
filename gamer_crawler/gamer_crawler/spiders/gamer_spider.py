@@ -28,30 +28,30 @@ class TargetBoardCrawler(scrapy.Spider):
         data = json.loads(data)
         for d in data:
             if int(d['hot']) >= HOT_VALUE:
-                target_item = TargetBoardItem()
-                target_item['board_id'] = d['bsn']
-                yield target_item
+                bsn = d['bsn']
+                yield scrapy.Request(f'https://forum.gamer.com.tw/B.php?page=1&bsn={bsn}', callback=self.get_total_page)
             else:
                 return None
         self.blist_page += 1
         yield scrapy.Request(self.domain_url + self.blist_base_url.format(self.blist_page), callback=self.parse)
 
-    # def get_total_page(self, response):
-    #     bid = response.url.split('bsn=')[1]
-    #     total_page_xpath = '//div[@class="b-pager pager"][position()=1]//p[@class="BH-pagebtnA"]//a[position()=last()]//text()'
-    #     total_page = response.xpath(total_page_xpath).get()
-    #     target_item = TargetBoardItem()
-    #     target_item['board_id'] = bid
-    #     target_item['total_page'] = int(total_page)
-    #     yield target_item
+    def get_total_page(self, response):
+        bid = response.url.split('bsn=')[1]
+        total_page_xpath = '//div[@class="b-pager pager"][position()=1]//p[@class="BH-pagebtnA"]//a[position()=last()]//text()'
+        total_page = response.xpath(total_page_xpath).get()
+        target_item = TargetBoardItem()
+        target_item['board_id'] = bid
+        target_item['total_page'] = int(total_page)
+        yield target_item
 
 
 class GamerCrawler(CrawlSpider):
     name = 'gamer'
-    execution_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
 
-    def __init__(self, all_board_id, **kwargs):    
+    def __init__(self, all_board_id, execution_time, **kwargs):    
         self.all_board_id = all_board_id.split(',')
+        self.execution_time = execution_time
+
         url_temp = []
         for bid in self.all_board_id:
             url_temp.append(

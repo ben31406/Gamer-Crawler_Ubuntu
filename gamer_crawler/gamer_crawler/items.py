@@ -20,3 +20,4 @@ class GamerCrawlerItem(scrapy.Item):
 
 class TargetBoardItem(scrapy.Item):
     board_id = scrapy.Field()
+    total_page = scrapy.Field()

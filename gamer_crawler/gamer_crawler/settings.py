@@ -13,7 +13,7 @@ HOT_VALUE = 1500
 BOT_NAME = 'gamer_crawler'
 
 #MongoDB DB_NAME
-DB_NAME = 'gamer_wsl'
+DB_NAME = 'gamer'
 
 
 SPIDER_MODULES = ['gamer_crawler.spiders']
