@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  pycrawler:
+    build: .
+    ports:
+      - 8083:8080
+    environment:
+      DB_URL: mongodb://db
+      AIRFLOW_HOME: /app
+    volumes:
+      - .:/app
+  db:
+    image: mongo:4.0-xenial
+    ports:
+      - 27016:27017
+    volumes:
+      - pycrawler:/data/db
+volumes:
+  pycrawler:
