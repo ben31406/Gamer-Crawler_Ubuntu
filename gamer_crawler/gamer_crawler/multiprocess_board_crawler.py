@@ -11,12 +11,12 @@ from pymongo import MongoClient
 from gamer_crawler.settings import DB_NAME
 from gamer_crawler.config_logger import config_logger
 
+
 logger = logging.getLogger(__name__)
 logger = config_logger(logger)
 
 def run(all_board_id, execution_time):
     subprocess.check_call(f'scrapy crawl gamer -a all_board_id={all_board_id} -a execution_time={execution_time}', shell=True)
-
 
 def allocate_board_groups(id_page_dic, group_num):
     '''
@@ -54,23 +54,25 @@ def allocate_board_groups(id_page_dic, group_num):
             stop = True
     return groups
 
-execution_time = datetime.strftime(datetime.now(), '%Y-%m-%d_%H:%M:%S')
-
-
-id_page_dic = dict()
-for doc in MongoClient(os.getenv('DB_URL')).gamer.target_board.find():
-    id_page_dic[doc['board_id']] = doc['total_page']
-
-id_groups = allocate_board_groups(id_page_dic, 8)
-
-processes = list()
-for id_group in id_groups:
-    arg = ','.join(id_group)
-    processes.append(Process(target=run, args=(arg,execution_time,)))
-
-
 
 if __name__ == "__main__":
+    
+    execution_time = datetime.strftime(datetime.now(), '%Y-%m-%d_%H:%M:%S')
+
+    # store the board_id versus its total_page in a dictionary
+    id_page_dic = dict()
+    for doc in MongoClient(os.getenv('DB_URL')).gamer.target_board.find():
+        id_page_dic[doc['board_id']] = doc['total_page']
+
+    # use "id_page_dic" to allocate board_id
+    id_groups = allocate_board_groups(id_page_dic, 8)
+
+    # for each group of board_ids, create a process to run gamer crawler
+    processes = list()
+    for id_group in id_groups:
+        arg = ','.join(id_group)
+        processes.append(Process(target=run, args=(arg,execution_time,)))
+
     for proc in processes:
         proc.start()
 

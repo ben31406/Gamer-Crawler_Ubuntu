@@ -11,11 +11,11 @@ default_args = {
     'retry_delay': timedelta(minutes=1),
 }   
     
-    
+   
 dag = DAG(
     dag_id='gamer-crawler',
-    start_date=datetime(2021,8,22,16,55, tzinfo=local_tz),
-    schedule_interval='*/2 * * * *',
+    start_date=datetime(2021,8,26,22,52, tzinfo=local_tz),
+    schedule_interval='@once',
     default_args=default_args,
     catchup=False,
 )

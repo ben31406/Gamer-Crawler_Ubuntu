@@ -5,7 +5,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update \
   && apt-get install sudo \
   && sudo apt-get install -y python3 python3-dev python3-pip \
-  && sudo apt-get install -y libxml2-dev libxslt1-dev zlib1g-dev libffi-dev libssl-dev \
+  && sudo apt-get install -y libxml2-dev libxslt1-dev zlib1g-dev libffi-dev libssl-dev 
 EXPOSE 8080
 WORKDIR /app
 ENV AIRFLOW_HOME=/app
@@ -15,7 +15,9 @@ COPY . .
 WORKDIR /app/gamer_crawler
 
 # CMD /bin/bash
-CMD airflow users create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin && airflow db init && airflow webserver -p 8081
+CMD airflow users create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin && airflow db init && airflow webserver -p 8080
 #CMD scrapy crawl gamer
 #CMD scrapy crawl Target_board && scrapy crawl gamer
 #CMD ["python3", "gamer_spider.py"]
+
+

@@ -48,4 +48,4 @@ class GamerCrawlerPipeline:
     def close_spider(self, spider):
         if spider.name == 'gamer':
             item_scraped_count = self.stats.get_stats()['item_scraped_count']
-            logger.info('item_scraped_count for the spider at' + spider.execution_time + ': ' + str(item_scraped_count))
+            logger.info('item_scraped_count for the spider at ' + spider.execution_time + ': ' + str(item_scraped_count))

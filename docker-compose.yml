@@ -1,9 +1,11 @@
-version: "3.8"
+version: "3.3"
 services:
   pycrawler:
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
     build: .
     ports:
-      - 8083:8080
+      - 8080:8080
     environment:
       DB_URL: mongodb://db
       AIRFLOW_HOME: /app
@@ -12,7 +14,7 @@ services:
   db:
     image: mongo:4.0-xenial
     ports:
-      - 27016:27017
+      - 27018:27017
     volumes:
       - pycrawler:/data/db
 volumes:

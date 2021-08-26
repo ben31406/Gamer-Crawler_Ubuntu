@@ -1,4 +1,3 @@
-import logging
 from gamer_crawler.settings import HOT_VALUE
 from gamer_crawler.items import TargetBoardItem
 from gamer_crawler.items import GamerCrawlerItem
@@ -58,10 +57,13 @@ class GamerCrawler(CrawlSpider):
                 f'https://forum.gamer.com.tw/B.php?page=1&bsn={bid}')
         self.start_urls = url_temp.copy()
         self.rules = [
-            Rule(LinkExtractor(allow=('B\.php\?page=.*&bsn=.*')),
+            Rule(LinkExtractor(allow=('B\.php\?page=([2-9]|[0-9]{2,})&?bsn=\d+$')),
                  callback='parse', follow=True)
         ]
         super().__init__(**kwargs)
+
+    def parse_start_url(self, response):
+        return self.parse(response)
 
     def parse(self, response):
         title_xpath = '//tr[@class="b-list__row b-list-item b-imglist-item"]//div[@class="b-list__tile"]/p/text()'
