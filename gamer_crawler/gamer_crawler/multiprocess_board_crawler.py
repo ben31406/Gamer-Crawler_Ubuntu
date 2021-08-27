@@ -65,7 +65,7 @@ if __name__ == "__main__":
         id_page_dic[doc['board_id']] = doc['total_page']
 
     # use "id_page_dic" to allocate board_id
-    id_groups = allocate_board_groups(id_page_dic, 8)
+    id_groups = allocate_board_groups(id_page_dic, os.cpu_count())
 
     # for each group of board_ids, create a process to run gamer crawler
     processes = list()
