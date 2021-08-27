@@ -13,11 +13,6 @@ COPY requirements.txt ./
 RUN pip3 install -r requirements.txt 
 COPY . .
 WORKDIR /app/gamer_crawler
-
-# CMD /bin/bash
 CMD airflow users create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin && airflow db init && airflow webserver -p 8080
-#CMD scrapy crawl gamer
-#CMD scrapy crawl Target_board && scrapy crawl gamer
-#CMD ["python3", "gamer_spider.py"]
 
 

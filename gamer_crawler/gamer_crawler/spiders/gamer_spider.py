@@ -1,15 +1,17 @@
-from gamer_crawler.settings import HOT_VALUE
-from gamer_crawler.items import TargetBoardItem
-from gamer_crawler.items import GamerCrawlerItem
-from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import CrawlSpider, Rule
-import scrapy
 from datetime import datetime
 import json
 import re
 import os
 import sys
 sys.path.append('..')
+
+from scrapy.linkextractors import LinkExtractor
+from scrapy.spiders import CrawlSpider, Rule
+import scrapy
+
+from gamer_crawler.settings import HOT_VALUE
+from gamer_crawler.items import TargetBoardItem
+from gamer_crawler.items import GamerCrawlerItem
 
 
 class TargetBoardCrawler(scrapy.Spider):

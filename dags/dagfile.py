@@ -1,7 +1,9 @@
+import pendulum
 from datetime import datetime, timedelta
+
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
-import pendulum
+
 
 local_tz = pendulum.timezone("Asia/Taipei")
 
@@ -10,8 +12,7 @@ default_args = {
     'retries': 2,
     'retry_delay': timedelta(minutes=1),
 }   
-    
-   
+       
 dag = DAG(
     dag_id='gamer-crawler',
     start_date=datetime(2021,8,26,22,52, tzinfo=local_tz),

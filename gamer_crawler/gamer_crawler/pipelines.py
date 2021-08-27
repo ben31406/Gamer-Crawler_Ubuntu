@@ -1,10 +1,3 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 import os
 import sys
@@ -17,6 +10,7 @@ from gamer_crawler.items import GamerCrawlerItem, TargetBoardItem
 from gamer_crawler.settings import DB_NAME
 from gamer_crawler.config_logger import config_logger
 
+
 logger = logging.getLogger(__name__)
 logger = config_logger(logger)
 
@@ -28,7 +22,6 @@ class GamerCrawlerPipeline:
     @classmethod
     def from_crawler(cls, crawler):
         return cls(crawler.stats)
-
 
     def open_spider(self, spider):
         self.client = MongoClient(os.getenv('DB_URL'))
@@ -48,4 +41,4 @@ class GamerCrawlerPipeline:
     def close_spider(self, spider):
         if spider.name == 'gamer':
             item_scraped_count = self.stats.get_stats()['item_scraped_count']
-            logger.info('item_scraped_count for the spider at ' + spider.execution_time + ': ' + str(item_scraped_count))
+            logger.info('item_scraped_count for the spider starting at ' + spider.execution_time + ': ' + str(item_scraped_count))
