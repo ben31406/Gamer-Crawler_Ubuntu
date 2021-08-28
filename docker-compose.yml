@@ -1,8 +1,6 @@
 version: "3.3"
 services:
   pycrawler:
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
     build: .
     ports:
       - 8080:8080

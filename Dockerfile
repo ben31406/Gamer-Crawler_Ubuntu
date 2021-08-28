@@ -13,6 +13,6 @@ COPY requirements.txt ./
 RUN pip3 install -r requirements.txt 
 COPY . .
 WORKDIR /app/gamer_crawler
-CMD airflow users create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin && airflow db init && airflow webserver -p 8080
+CMD airflow users create --role Admin --username Ben --email Ben --firstname Ben --lastname Ben --password Ben && airflow db init && airflow webserver -p 8080
 
 

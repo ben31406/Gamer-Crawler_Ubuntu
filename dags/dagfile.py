@@ -15,10 +15,9 @@ default_args = {
        
 dag = DAG(
     dag_id='gamer-crawler',
-    start_date=datetime(2021,8,26,22,52, tzinfo=local_tz),
-    schedule_interval='@once',
-    default_args=default_args,
-    catchup=False,
+    start_date=datetime(2021,8,28,13,30, tzinfo=local_tz),
+    schedule_interval='@hourly',
+    default_args=default_args
 )
 
 craw_target_board = BashOperator(
