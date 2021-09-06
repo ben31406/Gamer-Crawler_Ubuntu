@@ -1,3 +1,10 @@
+"""This file is a DAG definition file.
+
+This file contains two tasks, the first task is to crawl all target boards whose hot value is greater than or equal to HOT_VALUE,
+and the second task is to crawl all article information of the target boards.
+"""
+
+
 import pendulum
 from datetime import datetime, timedelta
 
@@ -15,7 +22,7 @@ default_args = {
        
 dag = DAG(
     dag_id='gamer-crawler',
-    start_date=datetime(2021,8,28,13,30, tzinfo=local_tz),
+    start_date=datetime(2021,8,28,15,0, tzinfo=local_tz),
     schedule_interval='@hourly',
     default_args=default_args
 )

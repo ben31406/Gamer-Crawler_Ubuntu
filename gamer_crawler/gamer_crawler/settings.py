@@ -1,19 +1,11 @@
-# Scrapy settings for gamer_crawler project
-#
-# For simplicity, this file contains only settings considered important or
-# commonly used. You can find more settings consulting the documentation:
-#
-#     https://docs.scrapy.org/en/latest/topics/settings.html
-#     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+"""Scrapy settings for gamer_crawler project"""
 
-# hot value threshold
-HOT_VALUE = 1500
 
 BOT_NAME = 'gamer_crawler'
 
-#MongoDB DB_NAME
-DB_NAME = 'gamer'
+HOT_VALUE = 1500  # threshold of the hot value
+
+DB_NAME = 'gamer'  # Database name in MongoDB 
 
 
 SPIDER_MODULES = ['gamer_crawler.spiders']

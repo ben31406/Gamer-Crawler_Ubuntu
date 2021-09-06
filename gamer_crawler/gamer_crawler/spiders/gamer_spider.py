@@ -15,12 +15,17 @@ from gamer_crawler.items import GamerCrawlerItem
 
 
 class TargetBoardCrawler(scrapy.Spider):
+    """A crawler to crawl all boards whose hot value >= HOT_VALUE
+    
+    This crawler will crawl all baord_ids and their total_page, and then store into MongoDB collection 'target_board'
+    """
+
     name = 'Target_board'
     domain_url = 'https://forum.gamer.com.tw/'
 
     blist_page = 1
     blist_base_url = '?page={}'     # 哈拉版列表url
-    alist_base_url = 'B.php?bsn={}'  # 文章列表url
+    alist_base_url = 'B.php?page=1&bsn={}'  # 文章列表url
     start_urls = [domain_url + blist_base_url.format(blist_page)]
 
     def parse(self, response):
@@ -30,13 +35,14 @@ class TargetBoardCrawler(scrapy.Spider):
         for d in data:
             if int(d['hot']) >= HOT_VALUE:
                 bsn = d['bsn']
-                yield scrapy.Request(f'https://forum.gamer.com.tw/B.php?page=1&bsn={bsn}', callback=self.get_total_page)
+                yield scrapy.Request(self.domain_url + self.alist_base_url.format(bsn), callback=self.get_total_page)  # crawl into article list url of the board
             else:
-                return None
+                return None  # stop the crawler while the hot value less than the HOT_VALUE
         self.blist_page += 1
-        yield scrapy.Request(self.domain_url + self.blist_base_url.format(self.blist_page), callback=self.parse)
+        yield scrapy.Request(self.domain_url + self.blist_base_url.format(self.blist_page), callback=self.parse)  # crawl next page
 
     def get_total_page(self, response):
+        """the function will get the total page number of the board and then yield the TargetBoardItem to store into MongoDB"""
         bid = response.url.split('bsn=')[1]
         total_page_xpath = '//div[@class="b-pager pager"][position()=1]//p[@class="BH-pagebtnA"]//a[position()=last()]//text()'
         total_page = response.xpath(total_page_xpath).get()
@@ -47,6 +53,15 @@ class TargetBoardCrawler(scrapy.Spider):
 
 
 class GamerCrawler(CrawlSpider):
+    """A crawler to crawl all article information of some target boards.
+    
+    Given some board ids, the crawler will crawl over those boards to get all articles' information
+
+    Args:
+         all_board_id [string]: A string which derived from a list of all target boards' board_id, join by comma
+         execution_time [string]: A time string, which represents the starting time of the multiprocessing
+    """
+    
     name = 'gamer'
 
     def __init__(self, all_board_id, execution_time, **kwargs):    
@@ -56,15 +71,16 @@ class GamerCrawler(CrawlSpider):
         url_temp = []
         for bid in self.all_board_id:
             url_temp.append(
-                f'https://forum.gamer.com.tw/B.php?page=1&bsn={bid}')
+                f'https://forum.gamer.com.tw/B.php?page=1&bsn={bid}')  # to generate start_urls, which is the set of article_list_urls with the page 1
         self.start_urls = url_temp.copy()
         self.rules = [
             Rule(LinkExtractor(allow=('B\.php\?page=([2-9]|[0-9]{2,})&?bsn=\d+$')),
                  callback='parse', follow=True)
-        ]
+        ]   # the rule accept all pages without page 1, since the parse_start_url will parse the first page
         super().__init__(**kwargs)
 
     def parse_start_url(self, response):
+        """this method allow the crawler parse the start url, otherwise, it won't parse it"""
         return self.parse(response)
 
     def parse(self, response):

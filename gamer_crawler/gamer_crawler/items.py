@@ -2,7 +2,7 @@ import scrapy
 
 
 class GamerCrawlerItem(scrapy.Item):
-    # define the fields for your item here like:
+    """field of gamer_info collection"""
     article_id = scrapy.Field()
     author_id = scrapy.Field()
     board_id = scrapy.Field()
@@ -14,5 +14,6 @@ class GamerCrawlerItem(scrapy.Item):
 
 
 class TargetBoardItem(scrapy.Item):
+    """field of target_board collection"""
     board_id = scrapy.Field()
     total_page = scrapy.Field()
